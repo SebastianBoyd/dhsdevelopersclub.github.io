@@ -2,6 +2,11 @@ language: node_js
 node_js:
   - "0.12.7"
 
+cache:
+  directories:
+    - node_modules
+    - bower_components
+
 # whitelist
 branches:
   only:
@@ -9,4 +14,6 @@ branches:
 
 before_script:
   - npm install -g gulp
+  - npm install -g bower
+  - bower install
 script: gulp test

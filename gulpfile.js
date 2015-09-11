@@ -16,6 +16,7 @@ var deploy = require('gulp-gh-pages');
 var stringifyObject = require('stringify-object');
 var gutil = require('gulp-util');
 var stream = require('stream');
+var checkPages = require("check-pages");
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -254,6 +255,32 @@ gulp.task('serve:dist', ['default'], function () {
     server: 'dist',
     middleware: [ historyApiFallback() ]
   });
+});
+
+gulp.task("pageCheck", ['serve:dist'], function(callback) {
+  var options = {
+    pageUrls: [
+      'http://localhost:5001/',
+    ],
+    checkLinks: true,
+    onlySameDomain: true,
+    queryHashes: true,
+    noRedirects: true,
+    noLocalLinks: true,
+    noEmptyFragments: true,
+    checkXhtml: true,
+    checkCaching: true,
+    checkCompression: true,
+    maxResponseTime: 200,
+    userAgent: 'custom-user-agent/1.2.3',
+    summary: true
+  };
+  checkPages(console, options, callback);
+});
+
+gulp.task('test', function () {
+  runSequence(
+    'serve:dist', 'pageCheck');
 });
 
 /**
