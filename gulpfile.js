@@ -16,7 +16,7 @@ var deploy = require('gulp-gh-pages');
 var stringifyObject = require('stringify-object');
 var gutil = require('gulp-util');
 var stream = require('stream');
-var checkPages = require("check-pages");
+var sitespeedio = require('gulp-sitespeedio');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -239,7 +239,7 @@ gulp.task('serve:dist', ['default'], function () {
   browserSync({
     port: 5001,
     notify: false,
-    logPrefix: 'PSK',
+    logPrefix: 'DHS',
     snippetOptions: {
       rule: {
         match: '<span id="browser-sync-binding"></span>',
@@ -257,30 +257,15 @@ gulp.task('serve:dist', ['default'], function () {
   });
 });
 
-gulp.task("pageCheck", ['serve:dist'], function(callback) {
-  var options = {
-    pageUrls: [
-      'http://localhost:5001/',
-    ],
-    checkLinks: true,
-    onlySameDomain: true,
-    queryHashes: true,
-    noRedirects: true,
-    noLocalLinks: true,
-    noEmptyFragments: true,
-    checkXhtml: true,
-    checkCaching: true,
-    checkCompression: true,
-    maxResponseTime: 200,
-    userAgent: 'custom-user-agent/1.2.3',
-    summary: true
-  };
-  checkPages(console, options, callback);
-});
+gulp.task('speedCheck', sitespeedio({
+      url: 'http://localhost/',
+      deepth: 1
+    })
+);
 
 gulp.task('test', function () {
   runSequence(
-    'serve:dist', 'pageCheck');
+    'serve:dist', 'speedCheck');
 });
 
 /**

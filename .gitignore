@@ -5,3 +5,4 @@ bower_components
 dist
 .publish
 .tmp
+npm-debug.log
